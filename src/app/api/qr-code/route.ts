@@ -69,3 +69,28 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+
+export async function GET(request: NextRequest) {
+  try {
+    await connectDB();
+    const qrCodes = await QrCode.find();
+    return NextResponse.json(
+      {
+        data: qrCodes,
+        message: "QR Codes fetched successfully",
+        success: true,
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error fetching QR Codes:", error);
+    return NextResponse.json(
+      {
+        message: "Internal Server Error while fetching QR Codes",
+        success: false,
+      },
+      { status: 500 }
+    );
+  }
+}

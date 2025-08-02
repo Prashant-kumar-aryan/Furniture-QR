@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
     await connectDB();
 
 
+    // Validate the QR code reference ID
     const QrResult = await QrCode.aggregate([
       { $unwind: "$refNo" }, // Expand refNo array
       {
@@ -32,6 +33,7 @@ export async function POST(request: NextRequest) {
       },
     ]);
 
+    // Check if the QR code exists and is active
     const matchedQr = QrResult[0];
     if(!matchedQr || matchedQr.status !== "ACTIVE") {
       return NextResponse.json(
@@ -42,6 +44,12 @@ export async function POST(request: NextRequest) {
         { status: 403 }
       );
     }
+
+    // Update the QR code status to USED
+    await QrCode.updateOne(
+      { "refNo.value": refId },
+      { $set: { "refNo.$.status": "USED" } }
+    );
 
     const payment = new Payment({
       name,
