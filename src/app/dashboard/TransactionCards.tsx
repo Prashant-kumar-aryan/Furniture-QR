@@ -24,6 +24,15 @@ export default function TransactionCards({ transactions }: Props) {
   const [filter, setFilter] = useState<"ALL" | TransactionStatus>("ALL");
   const router = useRouter();
 
+  // Memoized sorted transactions by createdAt descending
+  const sortedTransactions = useMemo(() => {
+    return [...transactions].sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }, [transactions]);
+
+  // Group by status using sorted transactions
   const grouped = useMemo(() => {
     const statusMap: Record<TransactionStatus, Transaction[]> = {
       PENDING: [],
@@ -31,11 +40,11 @@ export default function TransactionCards({ transactions }: Props) {
       FAILED: [],
       REJECTED: [],
     };
-    transactions.forEach((txn) => {
+    sortedTransactions.forEach((txn) => {
       if (statusMap[txn.status]) statusMap[txn.status].push(txn);
     });
     return statusMap;
-  }, [transactions]);
+  }, [sortedTransactions]);
 
   const filteredTxns = useMemo(() => {
     if (filter === "ALL") {
@@ -113,16 +122,22 @@ export default function TransactionCards({ transactions }: Props) {
               <span className="text-[13px] text-gray-500 font-mono truncate">
                 {txn.refId}
               </span>
+              <span className="text-xs text-gray-400 mt-1">
+                Created At:{" "}
+                {new Date(txn.createdAt).toLocaleString(undefined, {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
+              </span>
             </div>
 
             <div className="flex flex-col min-w-[120px] mb-4 md:mb-0 break-words">
               <span className="font-medium text-sm text-gray-700">Phone:</span>
               <span className="text-sm">{txn.phoneNumber}</span>
             </div>
-
-            <div className="flex flex-col min-w-[120px] mb-4 md:mb-0 break-words">
+            <div className="flex flex-col min-w-[120px] mb-4 md:mb-0">
               <span className="font-medium text-sm text-gray-700">UPI:</span>
-              <span className="mt-1 px-3 py-1 rounded bg-indigo-50 text-indigo-700 font-semibold border border-indigo-300 text-[15px] shadow-sm break-all">
+              <span className="mt-1 px-3 py-1.5 rounded-md bg-indigo-50 text-indigo-700 font-medium border border-indigo-200 text-sm shadow-sm break-all">
                 {txn.upiId}
               </span>
             </div>

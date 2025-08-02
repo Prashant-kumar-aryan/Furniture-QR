@@ -6,7 +6,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const linkClass = (path: string) =>
-    `block md:px-12  px-2 py-2 rounded hover:bg-slate-700 transition ${
+    `block md:pr-20 px-2 py-2 rounded hover:bg-slate-700 transition ${
       pathname === path ? "bg-slate-700 text-white" : "text-slate-300"
     }`;
 

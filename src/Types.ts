@@ -5,6 +5,8 @@ export type refNo = {
   status: "REVOKED" | "ACTIVE" | "USED";
 };
 
+// refNo
+
 export type QrBatch = {
   qrCodes: refNo[];
   batchNo: string;
