@@ -1,19 +1,28 @@
-export default async function Dashboard() {
-  const fetchTransactions = async () => {
-    const res = await fetch("http://localhost:3000/api/health", {
-      method: "GET",
-      cache: "no-store",
-    });
-    const data = await res.json();
-    console.log("Transactions fetched:", data);
-    return data;
-  };
+"use client";
+import TransactionCards from "./TransactionCards";
+import useTransactions from "@/hooks/useTransactions";
 
-  const transactions = await fetchTransactions();
+export default function DashboardPage() {
+  const { transactions, loading, error } = useTransactions();
+  // Fetch transactions when the component mounts
+  if (loading) {
+    return <div className="text-center py-12">Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12 text-red-600">
+        Failed to fetch transactions.
+      </div>
+    );
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Transaction History</h1>
+    <div className="flex flex-col min-h-screen  bg-yellow-50 px-4 py-8 w-full">
+      <h1 className="text-3xl font-bold mb-8 text-center">
+        Transaction History
+      </h1>
+      <TransactionCards transactions={transactions} />
     </div>
   );
 }

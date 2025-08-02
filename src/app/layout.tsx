@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex h-full">
         <Sidebar />
-        <main className="grow ml-54">{children}</main>
+        <main className="grow md:ml-54 md:mt-0 mt-10">{children}</main>
       </body>
     </html>
   );

@@ -1,15 +1,17 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose from "mongoose";
 
-export interface IQrCode extends Document {
-  refNo: string[];
-  batchNo: string;
-  createdAt: Date;
-}
-
-const QrCodeSchema = new Schema<IQrCode>({
-  refNo: { type: [String], required: true },
-  batchNo: { type: String, required: true , unique: true },
+const QrCodeSchema = new mongoose.Schema({
+  refNo: [
+    {
+      value: { type: String, required: true },
+      status: { type: String, enum: ["REVOKED", "ACTIVE", "USED"], required: true },
+    },
+  ],
+  batchNo: { type: String, required: true, unique: true },
+  status: { type: String, enum: ["REVOKED", "ACTIVE"], required: true },
   createdAt: { type: Date, default: Date.now },
-});
+},{timestamps: true});
 
-export default mongoose.models.QrCode || mongoose.model<IQrCode>("QrCode", QrCodeSchema);
+const QrCode = mongoose.models.QrCode || mongoose.model("QrCode", QrCodeSchema);
+
+export default QrCode;

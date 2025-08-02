@@ -3,16 +3,7 @@ import { useState } from "react";
 import BASE_URL from "@/components/BASE_URL";
 import useAuth from "@/hooks/useAuth";
 import handlePrintQrCode from "@/utils/handlePrintQrCode";
-
-type QrCodeStatus = "notRequested" | "loading" | "processed" | "error";
-
-type refNo = string;
-
-type QrBatch = {
-  qrCodes: refNo[];
-  batchNo: string;
-  createdAt: string;
-};
+import { QrCodeStatus, refNo, QrBatch } from "@/Types";
 
 export default function GenerateQrCodes() {
   const { token } = useAuth();
@@ -28,7 +19,7 @@ export default function GenerateQrCodes() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ numberOfCodes: 5 }),
+        body: JSON.stringify({ numberOfCodes: 15 }),
         cache: "no-store",
       });
 
@@ -109,7 +100,7 @@ export default function GenerateQrCodes() {
           <ul className="list-disc list-inside space-y-2">
             {qrBatch.qrCodes.map((code, idx) => (
               <li key={idx} className="text-brown-700 break-all">
-                {code}
+                {code.value}
               </li>
             ))}
           </ul>

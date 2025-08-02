@@ -2,17 +2,10 @@ import { NextResponse , NextRequest } from "next/server";
 import connectDB from "@/lib/connectDB";
 import QrCode from "@/models/QrCode";
 import crypto from "crypto";
+import { refNo , QrBatch } from "@/Types";
 
-type refNo = string;
-
-type QrBatch = {
-  qrCodes: refNo[];
-  batchNo: string;
-  createdAt: string;
-};
 export async function POST(request: NextRequest) {
   try {
-    
     let numberOfCodes: number;
 
     try {
@@ -40,13 +33,14 @@ export async function POST(request: NextRequest) {
     for (let i = 0; i < numberOfCodes; i++) {
       const refNo = crypto.randomBytes(4).toString("hex");
       const qrCode = `${refNo}-${batchNo}-${i + 1}`;
-      qrCodes.push(qrCode);
+      qrCodes.push({value:qrCode, status:'ACTIVE'});
     }
 
     // Save the QR code batch to the database
     const newQrCode = new QrCode({
       refNo: qrCodes,
       batchNo,
+      status:'ACTIVE',
       createdAt: new Date(),
     });
     await newQrCode.save();
@@ -56,6 +50,7 @@ export async function POST(request: NextRequest) {
         data: {
           qrCodes,
           batchNo,
+          status:'ACTIVE',
           createdAt: new Date().toISOString(),
         } as QrBatch,
         message: "QR Codes generated successfully",
