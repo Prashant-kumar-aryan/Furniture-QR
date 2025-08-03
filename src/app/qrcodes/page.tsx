@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import handlePrintQrCode from "@/utils/handlePrintQrCode";
 import { QrBatch, refNo } from "@/Types";
 import BASE_URL from "@/components/BASE_URL";
+import useAuth from "@/hooks/useAuth";
 
 type ApiResponse = {
   data: QrBatch[];
@@ -12,16 +13,23 @@ type ApiResponse = {
 };
 
 export default function QrBatchListPage() {
+  const { token, loading: authLoading } = useAuth();
   const [qrBatches, setQrBatches] = useState<QrBatch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
+    if (authLoading) return; // 🛑 Don't fetch if auth is loading
     async function fetchQrBatches() {
       setLoading(true);
       setError(null);
 
       try {
-        const res = await fetch(`${BASE_URL}/qr-code`);
+        const res = await fetch(`${BASE_URL}/qr-code`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!res.ok) throw new Error(`Error: ${res.status}`);
 
         const json: ApiResponse = await res.json();
@@ -51,7 +59,7 @@ export default function QrBatchListPage() {
     }
 
     fetchQrBatches();
-  }, []);
+  }, [token]);
 
   if (loading) {
     return (

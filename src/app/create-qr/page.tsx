@@ -73,12 +73,12 @@ export default function GenerateQrCodes() {
     : "linear-gradient(90deg, #4a270d 0%, #996633 100%)";
 
   return (
-    <section className="flex flex-col items-start justify-center min-h-screen bg-yellow-50 p-6 font-sans text-brown-900 w-full">
+    <section className="md:pl-20 pl-5 flex flex-col items-start justify-center min-h-screen bg-yellow-50 p-6 font-sans text-brown-900 w-full">
       <button
         onClick={() => {
           route.push("/qrcodes");
         }}
-        className="absolute top-4 right-4 px-4 py-2 bg-amber-800 text-white rounded-md shadow-md hover:bg-brown-300 transition-colors duration-300"
+        className="absolute md:top-4 right-4 top-20   px-4 py-2 bg-amber-800 text-white rounded-md shadow-md hover:bg-brown-300 transition-colors duration-300"
       >
         All Batches
       </button>

@@ -1,44 +1,47 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
 
-const allowedOrigins = ['http://127.0.0.1:5500/furniture.html', 'http://localhost:3000', 'http://localhost:5500', 'http://localhost:3002']
+const allowedOrigins = [
+  'http://127.0.0.1:5500/furniture.html',
+  'http://localhost:3000',
+  'http://localhost:5500',
+  'http://localhost:3002',
+];
 
 const corsOptions = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-}
- 
+};
+
 export function middleware(request: NextRequest) {
-  // Check the origin from the request
-  // console.log("SRC Middleware triggered for request:", request.url)
-  const origin = request.headers.get('origin') ?? ''
-  const isAllowedOrigin = allowedOrigins.includes(origin)
- 
-  // Handle preflighted requests
-  const isPreflight = request.method === 'OPTIONS'
- 
+  console.log('CORS middleware triggered for:', request.nextUrl.pathname);
+
+  const origin = request.headers.get('origin') ?? '';
+  const isAllowedOrigin = allowedOrigins.includes(origin);
+  const isPreflight = request.method === 'OPTIONS';
+
+  // ✅ Handle preflight (OPTIONS) request
   if (isPreflight) {
-    const preflightHeaders = {
+    const headers = {
       ...(isAllowedOrigin && { 'Access-Control-Allow-Origin': origin }),
       ...corsOptions,
-    }
-    return NextResponse.json({}, { headers: preflightHeaders })
+    };
+    return NextResponse.json({}, { headers });
   }
- 
-  // Handle simple requests
-  console.log("Processing request with origin:", origin)
-  const response = NextResponse.next()
- 
+
+  // ✅ For regular requests, set CORS headers
+  const response = NextResponse.next();
+
   if (isAllowedOrigin) {
-    response.headers.set('Access-Control-Allow-Origin', origin)
+    response.headers.set('Access-Control-Allow-Origin', origin);
   }
- 
+
   Object.entries(corsOptions).forEach(([key, value]) => {
-    response.headers.set(key, value)
-  })
- 
-  return response
+    response.headers.set(key, value);
+  });
+
+  return response;
 }
- 
+
 export const config = {
-  matcher: '/api/requestPayment',
+  matcher: '/api/:path*',
 };

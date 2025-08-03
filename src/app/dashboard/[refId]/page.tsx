@@ -5,12 +5,14 @@ import { useParams, useRouter } from "next/navigation";
 import useTransactions from "@/hooks/useTransactions";
 import { Transaction } from "@/Types";
 import BASE_URL from "@/components/BASE_URL";
+import useAuth from "@/hooks/useAuth";
 
 type TransactionStatus = "PENDING" | "COMPLETED" | "REJECTED" | "FAILED";
 
 const PAYMENT_METHODS = ["UPI", "Bank Transfer", "Card", "Cash"];
 
 export default function TransactionDetailsPage() {
+  const { token } = useAuth();
   const router = useRouter();
   const params = useParams() as { refId?: string };
   const refId = params.refId;
@@ -98,9 +100,11 @@ export default function TransactionDetailsPage() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           id: transaction!._id,
+          email: transaction!.email,
           refId: transaction!.refId,
           status,
           amount,
@@ -158,7 +162,7 @@ export default function TransactionDetailsPage() {
   };
 
   return (
-    <main className="w-full p-6 bg-white rounded shadow my-8 max-w-7xl mx-auto">
+    <main className="pl-15 w-full p-6 bg-white rounded shadow my-8 max-w-7xl mx-auto">
       <nav className="mb-6">
         <button
           type="button"
