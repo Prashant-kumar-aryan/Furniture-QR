@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import handlePrintQrCode from "@/utils/handlePrintQrCode";
-import { QrBatch, refNo } from "@/Types";
+import { QrBatch } from "@/Types";
 import BASE_URL from "@/components/BASE_URL";
 import useAuth from "@/hooks/useAuth";
 
@@ -38,7 +38,6 @@ export default function QrBatchListPage() {
           // Convert refNo -> qrCodes with fallback
           const convertedData = json.data.map((batch) => ({
             ...batch,
-            qrCodes: Array.isArray(batch.refNo) ? batch.refNo : [], // ensure qrCodes is always an array
           }));
 
           // Sort descending by createdAt
@@ -63,7 +62,7 @@ export default function QrBatchListPage() {
     }
 
     fetchQrBatches();
-  }, [token]);
+  }, [token, authLoading]);
 
   if (loading) {
     return (
@@ -112,7 +111,7 @@ export default function QrBatchListPage() {
                 })}
               </p>
               <p>
-                <strong>No of QR Codes:</strong> {batch.refNo.length}
+                {/* <strong>No of QR Codes:</strong> {batch.refNo.length} */}
               </p>
               <p>
                 <strong>Status:</strong> {batch.status}

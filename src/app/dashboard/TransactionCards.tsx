@@ -26,11 +26,27 @@ export default function TransactionCards({ transactions }: Props) {
 
   // Memoized sorted transactions by createdAt descending
   const sortedTransactions = useMemo(() => {
-    return [...transactions].sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    return [...transactions].sort((a, b) => {
+      const dateA = normalizeDate(a.createdAt);
+      const dateB = normalizeDate(b.createdAt);
+      if (dateA && dateB) {
+        return dateB.getTime() - dateA.getTime();
+      }
+      return 0;
+    });
   }, [transactions]);
+
+  type MongoDate = string | number | Date | { $date: string | number | Date };
+
+  function normalizeDate(date: MongoDate | undefined): Date | null {
+    if (!date) return null;
+    if (date instanceof Date) return date;
+    if (typeof date === "string" || typeof date === "number")
+      return new Date(date);
+    if (typeof date === "object" && "$date" in date)
+      return new Date(date.$date);
+    return null;
+  }
 
   // Group by status using sorted transactions
   const grouped = useMemo(() => {
@@ -53,6 +69,13 @@ export default function TransactionCards({ transactions }: Props) {
       return grouped[filter] || [];
     }
   }, [filter, grouped]);
+
+  const normalizeDate1 = (input: MongoDate | undefined): Date => {
+    if (typeof input === "object" && input !== null && "$date" in input) {
+      return new Date(input.$date);
+    }
+    return new Date(input!);
+  };
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 sm:px-0">
@@ -124,7 +147,7 @@ export default function TransactionCards({ transactions }: Props) {
               </span>
               <span className="text-xs text-gray-400 mt-1">
                 Created At:{" "}
-                {new Date(txn.createdAt).toLocaleString(undefined, {
+                {normalizeDate1(txn.createdAt).toLocaleString(undefined, {
                   dateStyle: "medium",
                   timeStyle: "short",
                 })}

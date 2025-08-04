@@ -9,8 +9,6 @@ import useAuth from "@/hooks/useAuth";
 
 type TransactionStatus = "PENDING" | "COMPLETED" | "REJECTED" | "FAILED";
 
-const PAYMENT_METHODS = ["UPI", "Bank Transfer", "Card", "Cash"];
-
 export default function TransactionDetailsPage() {
   const { token } = useAuth();
   const router = useRouter();
@@ -29,6 +27,22 @@ export default function TransactionDetailsPage() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateError, setUpdateError] = useState<string | null>(null);
   const [updateSuccess, setUpdateSuccess] = useState<string | null>(null);
+  type MongoDate = string | number | Date | { $date: string | number | Date };
+  function normalizeDate(date: MongoDate | undefined | null): Date | null {
+    if (!date) return null;
+
+    if (date instanceof Date) return date;
+
+    if (typeof date === "string" || typeof date === "number") {
+      return new Date(date);
+    }
+
+    if (typeof date === "object" && "$date" in date) {
+      return new Date(date.$date);
+    }
+
+    return null;
+  }
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -133,22 +147,18 @@ export default function TransactionDetailsPage() {
   }
 
   // Format ISO 8601 date string into a readable format
-  function formatDate(dateStr: string | undefined | null) {
-    if (!dateStr) return "-";
+  function formatDate(dateInput: MongoDate | undefined | null) {
+    const date = normalizeDate(dateInput);
+    if (!date) return "-";
 
-    try {
-      const date = new Date(dateStr);
-      return new Intl.DateTimeFormat("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-      }).format(date);
-    } catch {
-      return dateStr; // fallback to original string
-    }
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    }).format(date);
   }
 
   const statusColors = {
@@ -211,35 +221,17 @@ export default function TransactionDetailsPage() {
 
           <div>
             <span className="font-semibold text-gray-700">Created At:</span>
-            <p>
-              {formatDate(
-                typeof transaction.createdAt === "string"
-                  ? transaction.createdAt
-                  : transaction.createdAt?.$date
-              )}
-            </p>
+            <p>{formatDate(normalizeDate(transaction.createdAt))}</p>
           </div>
 
           <div>
             <span className="font-semibold text-gray-700">Payment Date:</span>
-            <p>
-              {formatDate(
-                typeof transaction.paymentDate === "string"
-                  ? transaction.paymentDate
-                  : transaction.paymentDate?.$date
-              )}
-            </p>
+            <p>{formatDate(normalizeDate(transaction.paymentDate))}</p>
           </div>
 
           <div>
             <span className="font-semibold text-gray-700">Last Updated:</span>
-            <p>
-              {formatDate(
-                typeof transaction.updatedAt === "string"
-                  ? transaction.updatedAt
-                  : transaction.updatedAt?.$date
-              )}
-            </p>
+            <p>{formatDate(normalizeDate(transaction.updatedAt))}</p>
           </div>
         </section>
 
@@ -371,18 +363,3 @@ export default function TransactionDetailsPage() {
     </main>
   );
 }
-
-// Status colors - keep these here too
-const statusColors = {
-  COMPLETED: "bg-green-600 text-white border-green-700",
-  PENDING: "bg-yellow-400 text-yellow-900 border-yellow-500",
-  REJECTED: "bg-gray-600 text-white border-gray-700",
-  FAILED: "bg-red-600 text-white border-red-700",
-};
-
-const statusOutlineColors = {
-  COMPLETED: "border-green-600 text-green-600 hover:bg-green-100",
-  PENDING: "border-yellow-400 text-yellow-400 hover:bg-yellow-100",
-  REJECTED: "border-gray-400 text-gray-400 hover:bg-gray-100",
-  FAILED: "border-red-600 text-red-600 hover:bg-red-100",
-};
