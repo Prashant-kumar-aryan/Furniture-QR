@@ -27,7 +27,7 @@ export type Transaction = {
   amount?: number;
   transactionId?: string;
   paymentMethod?: string;
-  createdAt?: { $date: string };
-  paymentDate?: { $date: string };
-  updatedAt?: { $date: string };
+  createdAt?: { $date: | Date | string | number } | Date | string | number;
+  paymentDate?: { $date: | Date | string | number }| Date | string | number;
+  updatedAt?: { $date: | Date | string | number }| Date | string | number;
 };
