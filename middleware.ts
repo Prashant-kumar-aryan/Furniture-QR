@@ -1,20 +1,37 @@
-    import { NextResponse } from 'next/server';
-    import type { NextRequest } from 'next/server';
+// middleware.ts
 
-    export function middleware(request: NextRequest) {
-      const response = NextResponse.next();
+import { NextRequest, NextResponse } from 'next/server';
 
-      // Allow requests from any origin
-      response.headers.set('Access-Control-Allow-Origin', '*');
+const corsOptions = {
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Credentials': 'true',
+};
 
-      // Optional: Allow specific methods and headers if needed
-      response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-      response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+export function middleware(request: NextRequest) {
+  const origin = request.headers.get('origin') || '*';
+  const isPreflight = request.method === 'OPTIONS';
 
-      return response;
-    }
+  // Handle preflight request
+  if (isPreflight) {
+    return new NextResponse(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': origin,
+        ...corsOptions,
+      },
+    });
+  }
 
-    // Optional: Configure matcher to apply middleware only to specific paths
-    export const config = {
-      matcher: '/api/:path*', // Apply to all API routes
-    };
+  const response = NextResponse.next();
+  response.headers.set('Access-Control-Allow-Origin', origin);
+  Object.entries(corsOptions).forEach(([key, value]) => {
+    response.headers.set(key, value);
+  });
+
+  return response;
+}
+
+export const config = {
+  matcher: '/api/:path*',
+};
