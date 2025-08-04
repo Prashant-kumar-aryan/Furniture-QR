@@ -1,47 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server';
+    import { NextResponse } from 'next/server';
+    import type { NextRequest } from 'next/server';
 
-const allowedOrigins = [
-  'http://127.0.0.1:5500/furniture.html',
-  'http://localhost:3000',
-  'http://localhost:5500',
-  'http://localhost:3002',
-];
+    export function middleware(request: NextRequest) {
+      const response = NextResponse.next();
 
-const corsOptions = {
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+      // Allow requests from any origin
+      response.headers.set('Access-Control-Allow-Origin', '*');
 
-export function middleware(request: NextRequest) {
-  console.log('CORS middleware triggered for:', request.nextUrl.pathname);
+      // Optional: Allow specific methods and headers if needed
+      response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  const origin = request.headers.get('origin') ?? '';
-  const isAllowedOrigin = allowedOrigins.includes(origin);
-  const isPreflight = request.method === 'OPTIONS';
+      return response;
+    }
 
-  // ✅ Handle preflight (OPTIONS) request
-  if (isPreflight) {
-    const headers = {
-      ...(isAllowedOrigin && { 'Access-Control-Allow-Origin': origin }),
-      ...corsOptions,
+    // Optional: Configure matcher to apply middleware only to specific paths
+    export const config = {
+      matcher: '/api/:path*', // Apply to all API routes
     };
-    return NextResponse.json({}, { headers });
-  }
-
-  // ✅ For regular requests, set CORS headers
-  const response = NextResponse.next();
-
-  if (isAllowedOrigin) {
-    response.headers.set('Access-Control-Allow-Origin', origin);
-  }
-
-  Object.entries(corsOptions).forEach(([key, value]) => {
-    response.headers.set(key, value);
-  });
-
-  return response;
-}
-
-export const config = {
-  matcher: '/api/:path*',
-};
