@@ -7,6 +7,7 @@ const corsHeaders = {
 };
 
 export function middleware(request: NextRequest) {
+console.log("Middleware Hit")
   const isPreflight = request.method === 'OPTIONS';
 
   // Handle preflight request
