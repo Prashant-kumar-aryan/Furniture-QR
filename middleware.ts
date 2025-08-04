@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const allowedOrigins = [
-  'http://127.0.0.1:5500/furniture.html',
-  'http://localhost:3000',
-  'http://localhost:5500',
-  'http://localhost:3002',
-  process.env.NEXT_PUBLIC_CLIENT_USER_URL,
-  process.env.NEXT_PUBLIC_CLIENT_ADMIN_URL
+  'https://gajanand-traders-cashback-admin.vercel.app',
+  'https://gajanand-traders-cashback-admin-fe05tfau5.vercel.app',
+  'https://gajanand-traders-cashback-admin-*.vercel.app',
 ];
 
 const corsOptions = {
