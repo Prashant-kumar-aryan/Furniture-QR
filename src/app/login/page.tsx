@@ -98,8 +98,12 @@ export default function LoginPage() {
         setMessage("Login successful!");
         window.location.reload(); // Refresh the page to clear state
       }
-    } catch (err: any) {
-      setMessage(err.message || "Login failed");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setMessage(err.message);
+      } else {
+        setMessage("Login failed");
+      }
     }
   }
 }

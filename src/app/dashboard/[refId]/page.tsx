@@ -121,8 +121,12 @@ export default function TransactionDetailsPage() {
 
       setTransaction((prev) => (prev ? { ...prev, ...updatedData } : null));
       setUpdateSuccess("Transaction updated successfully.");
-    } catch (err: any) {
-      setUpdateError(err.message || "Unknown error occurred.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setUpdateError(err.message);
+      } else {
+        setUpdateError("Unknown error occurred.");
+      }
     } finally {
       setIsUpdating(false);
     }

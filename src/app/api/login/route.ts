@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import ConnectDB from "@/lib/connectDB";
 import User from "@/models/User";
-import sendEmail from "@/utils/nodeMailer";
 import sendLoginEmail from "@/utils/emailTemplates/sendLoginEmail";
 
 export async function POST(req: NextRequest) {
@@ -12,19 +11,18 @@ export async function POST(req: NextRequest) {
 
     if (!email || !password) {
       return NextResponse.json(
-        { message: "Email and password are required" }, 
+        { message: "Email and password are required" },
         { status: 400 }
       );
     }
 
     await ConnectDB();
 
-    // No password hashing - plain comparison
     const user = await User.findOne({ email });
 
     if (!user || user.password !== password) {
       return NextResponse.json(
-        { message: "Invalid email or password" }, 
+        { message: "Invalid email or password" },
         { status: 401 }
       );
     }
@@ -39,21 +37,25 @@ export async function POST(req: NextRequest) {
       secret,
       { expiresIn: "1d" }
     );
-    //send email 
+
     sendLoginEmail(email);
 
-
     return NextResponse.json(
-      { 
+      {
         data: { token },
-        message: "Login successful"
-      }, 
+        message: "Login successful",
+      },
       { status: 201 }
     );
-  } catch (err: any) {
-    console.error("Login error:", err);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("Login error:", err.message);
+    } else {
+      console.error("Unknown login error:", err);
+    }
+
     return NextResponse.json(
-      { message: "Internal Server Error" }, 
+      { message: "Internal Server Error" },
       { status: 500 }
     );
   }

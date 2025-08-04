@@ -51,8 +51,12 @@ export default function QrBatchListPage() {
         } else {
           throw new Error(json.message || "Failed to fetch QR batches");
         }
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch QR batches");
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Failed to fetch QR batches");
+        }
       } finally {
         setLoading(false);
       }
