@@ -3,12 +3,11 @@ import connectDB from "@/lib/connectDB";
 import QrCode from "@/models/QrCode";
 import crypto from "crypto";
 import { refNo, QrBatch } from "@/Types";
-import { verifyTokenFromHeader } from "@/utils/verifyToken"; // 👈 import auth util
+import { verifyTokenFromHeader } from "@/utils/verifyToken";
 import { sendQrBatchCreatedNotice } from "@/utils/emailTemplates/sendQrBatchCreatedNotice";
 
 export async function POST(request: NextRequest) {
   try {
-    // ✅ Verify token
     const authHeader = request.headers.get("authorization");
     if (!authHeader) {
       return NextResponse.json(
@@ -18,12 +17,11 @@ export async function POST(request: NextRequest) {
     }
     verifyTokenFromHeader(authHeader);
 
-    // ✅ Parse body
     let numberOfCodes: number;
     try {
       const body = await request.json();
       numberOfCodes = body.numberOfCodes;
-    } catch (err) {
+    } catch {
       return NextResponse.json(
         { message: "Invalid or missing JSON body", success: false },
         { status: 400 }
@@ -46,8 +44,8 @@ export async function POST(request: NextRequest) {
     const qrCodes: refNo[] = [];
 
     for (let i = 0; i < numberOfCodes; i++) {
-      const refNo = crypto.randomBytes(4).toString("hex");
-      const qrCode = `${refNo}-${batchNo}-${i + 1}`;
+      const refId = crypto.randomBytes(4).toString("hex");
+      const qrCode = `${refId}-${batchNo}-${i + 1}`;
       qrCodes.push({ value: qrCode, status: "ACTIVE" });
     }
 
@@ -59,8 +57,7 @@ export async function POST(request: NextRequest) {
     });
     await newQrCode.save();
 
-    //send email to admin on generation
-    sendQrBatchCreatedNotice(authHeader,batchNo,numberOfCodes);
+    sendQrBatchCreatedNotice(authHeader, batchNo, numberOfCodes);
 
     return NextResponse.json(
       {
@@ -75,12 +72,19 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message.toLowerCase() : "";
+    const isAuthError =
+      message.includes("token") || message.includes("unauthorized");
+
     console.error("Error in POST /api/qr-code:", error);
-    const isAuthError = error.message?.toLowerCase().includes("token") || error.message?.toLowerCase().includes("unauthorized");
+
     return NextResponse.json(
       {
-        message: isAuthError ? "Unauthorized" : "Internal Server Error while generating QR Codes",
+        message: isAuthError
+          ? "Unauthorized"
+          : "Internal Server Error while generating QR Codes",
         success: false,
       },
       { status: isAuthError ? 401 : 500 }
@@ -90,9 +94,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // ✅ Verify token
     const authHeader = request.headers.get("authorization");
-    console.log("GET request auth header:", authHeader);
     if (!authHeader) {
       return NextResponse.json(
         { message: "Unauthorized", success: false },
@@ -112,12 +114,19 @@ export async function GET(request: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message.toLowerCase() : "";
+    const isAuthError =
+      message.includes("token") || message.includes("unauthorized");
+
     console.error("Error in GET /api/qr-code:", error);
-    const isAuthError = error.message?.toLowerCase().includes("token") || error.message?.toLowerCase().includes("unauthorized");
+
     return NextResponse.json(
       {
-        message: isAuthError ? "Unauthorized" : "Internal Server Error while fetching QR Codes",
+        message: isAuthError
+          ? "Unauthorized"
+          : "Internal Server Error while fetching QR Codes",
         success: false,
       },
       { status: isAuthError ? 401 : 500 }

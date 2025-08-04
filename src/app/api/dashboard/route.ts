@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/connectDB";
 import Payment from "@/models/Payment";
 import { verifyTokenFromHeader } from "@/utils/verifyToken";
-import sendEmail from "@/utils/nodeMailer";
 import getPaymentStatusEmailHtml from "@/utils/emailTemplates/getPaymentStatusEmailHtml";
 
 
@@ -32,14 +31,25 @@ export async function GET(request: NextRequest) {
     const payments = await Payment.find();
 
     return NextResponse.json({ data: payments }, { status: 200 });
-  } catch (error: any) {
-    console.error("Error in GET request:", error);
-    const isAuthError = error.message?.toLowerCase().includes("unauthorized") || error.message?.toLowerCase().includes("token");
+  } catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error("Error:", error.message);
+    const isAuthError =
+      error.message.toLowerCase().includes("unauthorized") ||
+      error.message.toLowerCase().includes("token");
+
     return NextResponse.json(
       { error: isAuthError ? "Unauthorized" : "Internal Server Error" },
       { status: isAuthError ? 401 : 500 }
     );
   }
+
+  return NextResponse.json(
+    { error: "Internal Server Error" },
+    { status: 500 }
+  );
+}
+
 }
 
 export async function PUT(request: NextRequest) {
@@ -92,12 +102,23 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(payment, { status: 200 });
 
-  } catch (error: any) {
-    console.error("Error in PUT request:", error);
-    const isAuthError = error.message?.toLowerCase().includes("unauthorized") || error.message?.toLowerCase().includes("token");
+  } catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error("Error:", error.message);
+    const isAuthError =
+      error.message.toLowerCase().includes("unauthorized") ||
+      error.message.toLowerCase().includes("token");
+
     return NextResponse.json(
       { error: isAuthError ? "Unauthorized" : "Internal Server Error" },
       { status: isAuthError ? 401 : 500 }
     );
   }
+
+  return NextResponse.json(
+    { error: "Internal Server Error" },
+    { status: 500 }
+  );
+}
+
 }

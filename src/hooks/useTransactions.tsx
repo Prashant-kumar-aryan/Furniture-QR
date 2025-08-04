@@ -32,8 +32,12 @@ export default function useTransactions() {
 
       const data = await response.json();
       setTransactions(data.data || []);
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred");
+      }
     } finally {
       setLoading(false);
     }
