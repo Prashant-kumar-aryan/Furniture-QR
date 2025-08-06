@@ -1,9 +1,9 @@
-import { QrBatch } from "@/Types";
+import { QrBatch1 } from "@/app/qrcodes/page";
 import jsPDF from "jspdf";
 import qrcode from "qrcode";
 
 // Function to print QR codes with their images in a PDF
-export default async function handlePrintQrCode(qrBatch: QrBatch) {
+export default async function handlePrintQrCode(qrBatch: QrBatch1) {
   console.log("Recived Qr Batch",qrBatch);
   // return;
   const doc = new jsPDF();
@@ -15,14 +15,14 @@ export default async function handlePrintQrCode(qrBatch: QrBatch) {
   doc.setFontSize(12);
   doc.text(`Created At: ${qrBatch.createdAt}`, margin, 10);
   doc.text(`Batch No: ${qrBatch.batchNo}`, margin + 90, 10);
-  doc.text(`No of QR Codes: ${qrBatch.qrCodes.length}`, margin + 150, 10);
+  doc.text(`No of QR Codes: ${qrBatch.refNo.length}`, margin + 150, 10);
   doc.setLineWidth(0.1);
 
   let x = margin;
   let y = 20;
 
-  for (let i = 0; i < qrBatch.qrCodes.length; i++) {
-    const code = qrBatch.qrCodes[i];
+  for (let i = 0; i < qrBatch.refNo.length; i++) {
+    const code = qrBatch.refNo[i];
     const dataUrl = await qrcode.toDataURL(`${process.env.NEXT_PUBLIC_CLIENT_API_URL}?refId=${code.value}`);
 
     doc.addImage(dataUrl, 'PNG', x, y, qrSize, qrSize);
@@ -37,7 +37,7 @@ export default async function handlePrintQrCode(qrBatch: QrBatch) {
     }
 
     // Add new page if needed
-    if (y + qrSize > doc.internal.pageSize.getHeight() && i < qrBatch.qrCodes.length - 1) {
+    if (y + qrSize > doc.internal.pageSize.getHeight() && i < qrBatch.refNo.length - 1) {
       doc.addPage();
       x = margin;
       y = 20;
