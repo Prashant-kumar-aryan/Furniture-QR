@@ -1,20 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import handlePrintQrCode from "@/utils/handlePrintQrCode";
-import { QrBatch } from "@/Types";
+import handlePrintQrCode from "@/utils/handlePreviousCode";
+// import { QrBatch } from "@/Types";
 import BASE_URL from "@/components/BASE_URL";
 import useAuth from "@/hooks/useAuth";
 
+// type QrBatch
+
+export type QrBatch1 = {
+  refNo: {
+    value: string;
+    status: string;
+  }[];
+  batchNo: string;
+  createdAt: string;
+  status: "REVOKED" | "ACTIVE";
+};
+
 type ApiResponse = {
-  data: QrBatch[];
+  data: QrBatch1[];
   message: string;
   success: boolean;
 };
 
 export default function QrBatchListPage() {
   const { token, loading: authLoading } = useAuth();
-  const [qrBatches, setQrBatches] = useState<QrBatch[]>([]);
+  const [qrBatches, setQrBatches] = useState<QrBatch1[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
@@ -36,9 +48,7 @@ export default function QrBatchListPage() {
 
         if (json.success && Array.isArray(json.data)) {
           // Convert refNo -> qrCodes with fallback
-          const convertedData = json.data.map((batch) => ({
-            ...batch,
-          }));
+          const convertedData = json.data;
 
           // Sort descending by createdAt
           const sorted = convertedData.sort(
@@ -111,14 +121,16 @@ export default function QrBatchListPage() {
                 })}
               </p>
               <p>
-                {/* <strong>No of QR Codes:</strong> {batch.refNo.length} */}
+                <strong>No of QR Codes:</strong> {batch.refNo.length}
               </p>
               <p>
                 <strong>Status:</strong> {batch.status}
               </p>
             </div>
             <button
-              onClick={() => handlePrintQrCode(batch)}
+              onClick={() => {
+                handlePrintQrCode(batch);
+              }}
               className="px-4 py-2 bg-amber-900 text-yellow-50 rounded-md font-semibold shadow-lg transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-yellow-300 w-full sm:w-auto"
               title={`Print QR Codes for batch ${batch.batchNo}`}
             >
