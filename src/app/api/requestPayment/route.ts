@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import QrCode from "@/models/QrCode";
 import connectDB from "@/lib/connectDB";
 import Payment from "@/models/Payment";
+import getPaymentStatusEmailHtml from "@/utils/emailTemplates/getPaymentStatusEmailHtml";
 
 export async function POST(request: NextRequest) {
   try {
@@ -61,6 +62,7 @@ export async function POST(request: NextRequest) {
     });
 
     await payment.save();
+    getPaymentStatusEmailHtml("PENDING" , email);
 
     return NextResponse.json({ message: "Payment request processed successfully" }, { status: 200 });
   } catch (error) {

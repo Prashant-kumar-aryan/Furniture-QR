@@ -10,7 +10,7 @@ const paymentSchema = new mongoose.Schema({
     status: { type: String, enum: ["PENDING", "COMPLETED", "REJECTED", "FAILED"], required: true },
     //admin part
     amount: { type: Number},
-    transactionId: { type: String , unique: true },
+    transactionId: { type: String },
     paymentMethod: { type: String },
     createdAt: { type: Date, default: Date.now },
     paymentDate: { type: Date },
