@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
 
     await connectDB();
     const qrCodes = await QrCode.find();
-    const data = [...qrCodes,qrCodes:refNo]
+
     return NextResponse.json(
       {
         data: qrCodes,

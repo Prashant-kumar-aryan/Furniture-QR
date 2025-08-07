@@ -5,7 +5,7 @@ export async function sendQrBatchCreatedNotice(
   batchNo: string,
   noOfQrCodes: number
 ) {
-  const businessName = "Gajanand Traders"; // Change to your actual business/shop name
+  const businessName = "Treeworld  Natures pure quality Ply|Board";
 
   if (
     accessToken &&
@@ -14,121 +14,117 @@ export async function sendQrBatchCreatedNotice(
     noOfQrCodes > 0
   ) {
     const html = `
+    <div style="
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      border: 1px solid #cce6cc;
+      border-radius: 14px;
+      background-color: #f6fff6;
+      color: #2e5939;
+      box-shadow: 0 6px 16px rgba(0, 128, 0, 0.2);
+    ">
+      <!-- Header -->
       <div style="
-        font-family: 'Georgia', serif;
-        max-width: 600px;
-        margin: 40px auto;
-        border: 1px solid #8B6D5C;
-        border-radius: 14px;
-        background-color: #f9f5f0;
-        color: #4b3b2b;
-        box-shadow: 0 6px 16px rgba(139, 109, 92, 0.35);
+        background: linear-gradient(135deg, #1e7c4a 0%, #4caf50 100%);
+        color: white;
+        padding: 20px 24px;
+        text-align: center;
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+        box-shadow: inset 0 -2px 6px rgba(0,0,0,0.2);
       ">
-        <!-- Header -->
+        <!-- Logo -->
         <div style="
-          background: linear-gradient(135deg, #7b5e44 0%, #a1866f 100%);
-          color: white;
-          padding: 28px 24px;
-          text-align: center;
-          border-top-left-radius: 14px;
-          border-top-right-radius: 14px;
-          box-shadow: inset 0 -3px 6px rgba(0,0,0,0.25);
+          background-color: white;
+          display: inline-block;
+          border-radius: 50%;
+          padding: 8px;
+          margin-bottom: 10px;
         ">
-          <h1 style="
-            margin: 0;
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: 0.07em;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          ">
-            ${businessName} - QR Code Batch Created
-          </h1>
+          <img src="https://res.cloudinary.com/dtsf7jbkq/image/upload/v1754586646/Add_a_subheading_20250409_123137_0000_pq4ohe.png"
+            alt="Logo"
+            width="160"
+            height="160"
+            style="display: block;" />
         </div>
+        <h1 style="
+          margin: 6px 0 0 0;
+          font-size: 24px;
+          font-weight: 800;
+          letter-spacing: 0.06em;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        ">
+          ${businessName} - QR Code Batch Created
+        </h1>
+      </div>
 
-        <!-- Content -->
-        <div style="padding: 36px 40px; text-align: center; line-height: 1.6;">
-          <p style="
-            font-size: 18px;
-            margin: 0 0 28px 0;
-            font-weight: 600;
-            color: #5a4129;
-          ">
-            Dear Valued Partner,
-          </p>
+      <!-- Content -->
+      <div style="padding: 30px 36px; text-align: center; line-height: 1.6;">
+        <p style="font-size: 18px; margin: 0 0 24px; font-weight: 600;">
+          Dear Valued Partner,
+        </p>
 
-          <p style="
-            font-size: 22px;
-            font-weight: 700;
-            margin: 0 0 28px 0;
-            display: inline-block;
-            background-color: #d4c9b1;
-            color: #5a422d;
-            border-radius: 32px;
-            padding: 10px 26px;
-            box-shadow: 0 3px 10px rgba(90, 66, 45, 0.15);
-          ">
-            Batch No: ${batchNo}
-          </p>
+        <p style="
+          font-size: 20px;
+          font-weight: 700;
+          background-color: #d6f5d6;
+          color: #256d3d;
+          display: inline-block;
+          padding: 10px 24px;
+          border-radius: 30px;
+          box-shadow: 0 3px 8px rgba(0, 128, 0, 0.1);
+          margin-bottom: 24px;
+        ">
+          Batch No: ${batchNo}
+        </p>
 
-          <p style="
-            font-size: 16px;
-            margin-bottom: 24px;
-            color: #5a422d;
-          ">
-            Your batch of <strong>${noOfQrCodes}</strong> QR codes has been successfully generated.
-          </p>
+        <p style="font-size: 16px; margin-bottom: 20px;">
+          Your batch of <strong>${noOfQrCodes}</strong> QR codes has been successfully generated.
+        </p>
 
-          <p style="
-            font-size: 16px;
-            margin-bottom: 24px;
-            color: #5a422d;
-          ">
-            You can now start receiving payment requests securely using these QR codes.<br />
-            We recommend printing or securely storing your QR codes for easy access.
-          </p>
+        <p style="font-size: 16px; margin-bottom: 20px;">
+          You can now start receiving payment requests securely using these QR codes.<br/>
+          We recommend printing or securely storing your QR codes for easy access.
+        </p>
 
-          <p style="
-            font-size: 15px;
-            margin-bottom: 0;
-            font-weight: 600;
-            color: #7a6650;
-          ">
-            <em>Reminder:</em> Please revoke any previously unused QR code batches to prevent unauthorized use.
-          </p>
-
-          <div style="margin-top: 36px; text-align: left; max-width: 80%; margin-left: auto; margin-right: auto;">
-            <small style="
-              display: block;
-              background-color: #e7dfd6;
-              color: #a38a6d;
-              font-family: 'Courier New', Courier, monospace;
-              padding: 10px 14px;
-              border-radius: 8px;
-              font-size: 11px;
-              word-break: break-word;
-              user-select: all;
-            ">
-              <strong>Access Token Used for this Batch:</strong><br />
-              ${accessToken}
-            </small>
-          </div>
-        </div>
-
-        <!-- Footer -->
-        <div style="
-          background-color: #e7dfd6;
-          padding: 20px 40px;
-          font-size: 12px;
-          color: #7a6753;
-          text-align: center;
+        <p style="
+          font-size: 15px;
           font-style: italic;
-          border-bottom-left-radius: 14px;
-          border-bottom-right-radius: 14px;
+          margin-bottom: 0;
+          color: #3b5e3b;
         ">
-          &copy; ${new Date().getFullYear()} ${businessName}. All rights reserved.
+          <strong>Note:</strong> Please revoke any previously unused QR code batches to prevent unauthorized use.
+        </p>
+
+        <div style="
+          margin-top: 30px;
+          text-align: left;
+          background-color: #ecf9ec;
+          padding: 14px;
+          border-radius: 8px;
+          font-size: 12px;
+          word-break: break-word;
+          font-family: 'Courier New', monospace;
+        ">
+          <strong>Access Token Used for this Batch:</strong><br/>
+          ${accessToken}
         </div>
       </div>
+
+      <!-- Footer -->
+      <div style="
+        background-color: #e6ffe6;
+        padding: 16px 30px;
+        font-size: 12px;
+        color: #3d5941;
+        text-align: center;
+        border-bottom-left-radius: 14px;
+        border-bottom-right-radius: 14px;
+      ">
+        &copy; ${new Date().getFullYear()} ${businessName}. All rights reserved.
+      </div>
+    </div>
     `;
 
     await sendEmail({
@@ -137,6 +133,8 @@ export async function sendQrBatchCreatedNotice(
       html,
     });
   } else {
-    console.warn(`Notice not sent - invalid or missing data. accessToken=${accessToken}, batchNo=${batchNo}, noOfQrCodes=${noOfQrCodes}`);
+    console.warn(
+      `Notice not sent - invalid or missing data. accessToken=${accessToken}, batchNo=${batchNo}, noOfQrCodes=${noOfQrCodes}`
+    );
   }
 }

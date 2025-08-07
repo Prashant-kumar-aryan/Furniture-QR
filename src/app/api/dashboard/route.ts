@@ -96,7 +96,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Payment not found" }, { status: 404 });
     }
 
- 
+    console.log("Email APi Hit");
     getPaymentStatusEmailHtml(status, email);
       
 
