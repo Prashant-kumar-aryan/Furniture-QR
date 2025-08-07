@@ -4,7 +4,11 @@ export default async function sendPaymentStatusEmail(
   status: "COMPLETED" | "FAILED" | "PENDING" | string,
   email: string
 ) {
-  const shopName = "Gajanand Traders";
+  const shopName = "TreeWorld";
+  const shopTagline = "Nature's Pure Quality";
+  const shopSubtitle = "PLY | BOARDS";
+  const logoUrl =
+    "https://res.cloudinary.com/dtsf7jbkq/image/upload/v1754586646/Add_a_subheading_20250409_123137_0000_pq4ohe.png";
 
   if (
     (status === "COMPLETED" || status === "FAILED" || status === "PENDING") &&
@@ -13,15 +17,15 @@ export default async function sendPaymentStatusEmail(
   ) {
     const messages = {
       COMPLETED: {
-        fg: "#2e7d32",
+        fg: "#1b5e20",
         bg: "#e8f5e9",
         label: "COMPLETED",
-        english: `🎉 Congratulations! Your cashback has been successfully credited to your account.<br/>Thank you for your patience and trust.`,
-        hindi: `🎉 बधाई हो! आपका कैशबैक सफलतापूर्वक आपके खाते में जमा कर दिया गया है।<br/>आपके विश्वास के लिए धन्यवाद।`,
+        english: `🎉 Congratulations! Your cashback has been successfully credited to your account.<br/>Thank you for your patience and trust. Keep shopping with us!`,
+        hindi: `🎉 बधाई हो! आपका कैशबैक सफलतापूर्वक आपके खाते में जमा कर दिया गया है।<br/>आपके विश्वास के लिए धन्यवाद। कृपया हमारे साथ खरीदारी करते रहें!`,
       },
       FAILED: {
-        fg: "#c62828",
-        bg: "#fdecea",
+        fg: "#b71c1c",
+        bg: "#ffebee",
         label: "FAILED",
         english: `❌ The UPI ID you provided appears to be incorrect.<br/>Please contact the shop to resolve the issue.`,
         hindi: `❌ आपने जो UPI ID दी है वह गलत प्रतीत हो रही है।<br/>कृपया समस्या के समाधान के लिए दुकान से संपर्क करें।`,
@@ -42,22 +46,41 @@ export default async function sendPaymentStatusEmail(
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         max-width: 600px;
         margin: 40px auto;
-        background: #fdfaf6;
-        border-radius: 12px;
+        background: #ffffff;
+        border-radius: 10px;
         overflow: hidden;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        border: 1px solid #c8e6c9;
         color: #333;
       ">
         <!-- Header -->
         <div style="
-          background: linear-gradient(135deg, #a67c52, #6b4f3a);
-          padding: 28px;
+          background: #2e7d32;
+          padding: 32px 24px 24px;
           color: white;
           text-align: center;
         ">
-          <h2 style="margin: 0; font-size: 24px;">
-            ${shopName} - Payment Status: ${message.label}
+          <!-- Logo -->
+          <div style="
+            background: white;
+            display: inline-block;
+            padding: 4px;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+          ">
+            <img src="${logoUrl}" alt="TreeWorld Logo"
+              style="width: 150px; height: auto; display: block;" />
+          </div>
+
+          <!-- Shop Info -->
+          <h2 style="margin: 10px 0 0; font-size: 24px; font-weight: bold;">
+            ${shopName}
           </h2>
+          <div style="font-size: 14px; margin-top: 4px;">${shopTagline}</div>
+          <div style="font-size: 13px;">${shopSubtitle}</div>
+          <div style="margin-top: 14px; font-size: 16px;">
+            Payment Status: <strong>${message.label}</strong>
+          </div>
         </div>
 
         <!-- Body -->
@@ -68,14 +91,14 @@ export default async function sendPaymentStatusEmail(
             font-weight: 600;
             display: inline-block;
             padding: 10px 24px;
-            font-size: 20px;
+            font-size: 18px;
             border-radius: 30px;
             margin: 16px 0;
           ">
             ${message.label}
           </div>
 
-          <div style="margin-top: 30px; font-size: 16px; line-height: 1.7;">
+          <div style="margin-top: 30px; font-size: 16px; line-height: 1.7; text-align: justify;">
             <p>${message.english}</p>
             <hr style="border: none; border-top: 1px solid #ddd; margin: 24px 0;" />
             <p>${message.hindi}</p>
@@ -84,11 +107,11 @@ export default async function sendPaymentStatusEmail(
 
         <!-- Footer -->
         <div style="
-          background: #f0e6d6;
+          background: #e8f5e9;
           text-align: center;
           padding: 16px;
-          font-size: 13px;
-          color: #6b5130;
+          font-size: 12px;
+          color: #2e7d32;
           font-style: italic;
         ">
           &copy; ${new Date().getFullYear()} ${shopName}. All rights reserved.

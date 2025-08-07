@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 export default async function sendEmail({to, subject, html }:{to: string, subject: string, html: string} ) {
   // send mail with defined transport object
   const info = await transporter.sendMail({
-    from: process.env.NEXT_PUBLIC_NODEMAILER_USER, // sender address
+    from: `TreeWorld - Nature's Pure Quality <${process.env.NEXT_PUBLIC_NODEMAILER_USER}>`,
     to,
     subject,
     html,
