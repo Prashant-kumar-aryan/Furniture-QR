@@ -13,7 +13,7 @@ export default async function handlePrintQrCode(qrBatch: QrBatch) {
 
   // Add header text
   doc.setFontSize(12);
-  doc.text(`Created At: ${qrBatch.createdAt}`, margin, 10);
+  doc.text(`Created At: ${new Date(qrBatch.createdAt).toLocaleString()}`, margin, 10);
   doc.text(`Batch No: ${qrBatch.batchNo}`, margin + 90, 10);
   doc.text(`No of QR Codes: ${qrBatch.qrCodes.length}`, margin + 150, 10);
   doc.setLineWidth(0.1);
