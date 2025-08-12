@@ -5,7 +5,7 @@ import handlePrintQrCode from "@/utils/handlePreviousCode";
 // import { QrBatch } from "@/Types";
 import BASE_URL from "@/components/BASE_URL";
 import useAuth from "@/hooks/useAuth";
-
+import handleExcelPrevious from "@/utils/handleExcelPrevious";
 // type QrBatch
 
 export type QrBatch1 = {
@@ -100,16 +100,16 @@ export default function QrBatchListPage() {
   console.log(qrBatches);
   return (
     <main className="p-6 min-h-screen bg-yellow-50 text-brown-900 font-sans">
-      <h1 className="text-3xl font-extrabold mb-6 drop-shadow-md">
+      <h1 className="ml-20 text-3xl font-extrabold mb-6 drop-shadow-md">
         QR Code Batches
       </h1>
       <div className="space-y-6 max-w-4xl mx-auto">
         {qrBatches.map((batch) => (
           <section
             key={batch.batchNo}
-            className="bg-brown-100 rounded-lg shadow-lg p-6 flex flex-col sm:flex-row sm:items-center justify-between"
+            className="bg-brown-100 rounded-lg shadow-lg p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5"
           >
-            <div className="mb-4 sm:mb-0">
+            <div className="mb-4 sm:mb-0 grow">
               <p>
                 <strong>Batch No:</strong> {batch.batchNo}
               </p>
@@ -135,6 +135,15 @@ export default function QrBatchListPage() {
               title={`Print QR Codes for batch ${batch.batchNo}`}
             >
               Print PDF
+            </button>
+            <button
+              onClick={() => {
+                handleExcelPrevious(batch);
+              }}
+              className="px-4 py-2 bg-green-600 active:scale-98 active:shadow-2xl text-yellow-50 rounded-md font-semibold shadow-lg transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-yellow-300 w-full sm:w-auto"
+              title={`Print QR Codes for batch ${batch.batchNo}`}
+            >
+              Download Excel
             </button>
           </section>
         ))}

@@ -6,6 +6,7 @@ import useAuth from "@/hooks/useAuth";
 import handlePrintQrCode from "@/utils/handlePrintQrCode";
 import { QrCodeStatus, QrBatch } from "@/Types";
 import { useRouter } from "next/navigation";
+import downloadExcel from "@/utils/handleExcel";
 export default function GenerateQrCodes() {
   const { token } = useAuth();
   const route = useRouter();
@@ -102,6 +103,9 @@ export default function GenerateQrCodes() {
           <option value={20}>20 (1 page)</option>
           <option value={40}>40 (2 pages)</option>
           <option value={60}>60 (3 pages)</option>
+          <option value={80}>80 (4 pages)</option>
+          <option value={100}>100 (5 pages)</option>
+          <option value={120}>120 (6 pages)</option>
         </select>
       </label>
 
@@ -136,6 +140,13 @@ export default function GenerateQrCodes() {
               onClick={() => handlePrintQrCode(qrBatch)}
             >
               Print
+            </button>
+            <button
+              className="bg-emerald-600 active:scale-98 text-sm px-2 py-2.5 rounded-md font-semibold transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-400 text-yellow-50 shadow-lg w-32 hover:bg-emerald-700"
+              title="Download Excel File"
+              onClick={() => downloadExcel(qrBatch)}
+            >
+              Download Excel
             </button>
           </div>
 

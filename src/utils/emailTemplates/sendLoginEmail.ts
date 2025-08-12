@@ -108,7 +108,7 @@ const sendLoginEmail = (email: string) => {
             border-radius: 20px;
             display: inline-block;
           ">
-            Login Time: ${new Date().toLocaleString()}
+           Login Time: ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}
           </p>
         </div>
 

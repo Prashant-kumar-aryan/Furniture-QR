@@ -8,8 +8,8 @@ import getPaymentStatusEmailHtml from "@/utils/emailTemplates/getPaymentStatusEm
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, phoneNumber, email, upiId, refId } = await request.json();
-    if (!name || !phoneNumber || !upiId || !refId) {
+    const { name, phoneNumber, email, upiId, refId , city } = await request.json();
+    if (!name || !phoneNumber || !upiId || !refId ||!city ) {
       return NextResponse.json(
         {
           success: false,
@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
       email: email || '',
       upiId,
       refId,
+      city,
       status: "PENDING",
     });
 

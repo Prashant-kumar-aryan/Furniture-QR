@@ -55,6 +55,13 @@ export default function Sidebar() {
         >
           Create QR
         </Link>
+        <Link
+          href="/total-cashback"
+          className={linkClass("/total-cashback")}
+          tabIndex={0}
+        >
+          Total Cashback
+        </Link>
       </nav>
 
       {/* Logout button at bottom on desktop */}
