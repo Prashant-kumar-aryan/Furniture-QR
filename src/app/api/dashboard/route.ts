@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   try {
     // ✅ Verify token
     const authHeader = request.headers.get("authorization");
-    console.log("GET request auth header:", authHeader);
+    // console.log("GET request auth header:", authHeader);
     if (!authHeader) {
       return NextResponse.json(
         { message: "Unauthorized", success: false },
