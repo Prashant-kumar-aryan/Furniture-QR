@@ -34,8 +34,13 @@ export default async function sendEmail({
 
     console.log("✅ Message sent:", info.messageId);
     return { success: true, messageId: info.messageId };
-  } catch (error: any) {
-    console.error("❌ Email send error:", error.response || error);
+  } catch (error: unknown) {
+  if (error instanceof Error) {
+    console.error("❌ Email send error:", (error as { response?: unknown }).response || error.message);
     return { success: false, error: error.message || "Email sending failed" };
   }
+  console.error("❌ Email send error:", error);
+  return { success: false, error: "Email sending failed" };
+}
+
 }
