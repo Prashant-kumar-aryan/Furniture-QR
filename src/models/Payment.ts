@@ -7,6 +7,7 @@ const paymentSchema = new mongoose.Schema({
     email: { type: String },
     upiId: { type: String, required: true },
     refId: { type: String, required: true, unique: true },
+    city:  {type: String, required :true},
     status: { type: String, enum: ["PENDING", "COMPLETED", "REJECTED", "FAILED"], required: true },
     //admin part
     amount: { type: Number},

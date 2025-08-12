@@ -23,11 +23,13 @@ export type Transaction = {
   email?: string;
   upiId: string;
   refId: string;
+  city: string;
   status: TransactionStatus;
+  //admin part
   amount?: number;
   transactionId?: string;
   paymentMethod?: string;
-  createdAt?: { $date: | Date | string | number } | Date | string | number;
-  paymentDate?: { $date: | Date | string | number }| Date | string | number;
-  updatedAt?: { $date: | Date | string | number }| Date | string | number;
+  createdAt?: Date;
+  paymentDate?: Date;
+  updatedAt?: Date;
 };

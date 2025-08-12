@@ -27,7 +27,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/dashboard/page.js"
+    "src/app/dashboard/page.js",
+    "src/app/total-cashback/page.txs"
   ],
   "exclude": ["node_modules"]
 }

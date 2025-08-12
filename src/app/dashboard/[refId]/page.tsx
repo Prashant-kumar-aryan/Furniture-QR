@@ -208,6 +208,11 @@ export default function TransactionDetailsPage() {
           </div>
 
           <div>
+            <span className="font-semibold text-gray-700">City:</span>
+            <p>{transaction.city?.trim() || "NA"}</p>
+          </div>
+
+          <div>
             <span className="font-semibold text-indigo-700">UPI ID:</span>
             <p className="bg-indigo-50 border border-indigo-300 rounded px-2 py-1 font-semibold inline-block">
               {transaction.upiId}
