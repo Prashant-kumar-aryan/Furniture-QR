@@ -130,7 +130,7 @@ export async function sendQrBatchCreatedNotice(
     await sendEmail({
       to: process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@example.com",
       subject: `🎉 ${businessName} - Your QR Code Batch is Ready`,
-      html,
+      htmlContent:html,
     });
   } else {
     console.warn(

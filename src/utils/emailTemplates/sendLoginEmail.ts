@@ -157,7 +157,7 @@ const sendLoginEmail = (email: string) => {
   sendEmail({
     to: email,
     subject,
-    html,
+    htmlContent:html,
   });
 };
 

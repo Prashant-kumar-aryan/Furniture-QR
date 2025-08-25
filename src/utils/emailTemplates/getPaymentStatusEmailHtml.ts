@@ -122,7 +122,7 @@ export default async function sendPaymentStatusEmail(
     await sendEmail({
       to: email,
       subject: `📩 ${shopName} – Your payment status: ${status}`,
-      html,
+      htmlContent:html,
     });
   } else {
     console.warn(
